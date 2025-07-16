@@ -1,0 +1,19 @@
+
+
+#Pasta do Intelij
+.idea
+*.iws
+*.iml
+*.ipr
+
+# Ignorar chaves e credenciais
+credentials.json
+*.json
+
+#Maven output#
+/target/
+
+#Arquivos de log#
+*.log
+
+
