@@ -1,18 +1,17 @@
 package com.example.carteira_api.controller;
 
-import com.example.carteira_api.dto.AtivoResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.carteira_api.service.AtivoService;
+import com.example.carteira_api.service.SheetsService;
 
 @RequestMapping("/v1/carteira/ativo")
 @RestController
 public class AtivoController {
 
-    private final AtivoService service;
+    private final SheetsService service;
 
     public AtivoController(){
-        this.service = new AtivoService();
+        this.service = new SheetsService();
     }
 
     @GetMapping("/{nomeAtivo}")
