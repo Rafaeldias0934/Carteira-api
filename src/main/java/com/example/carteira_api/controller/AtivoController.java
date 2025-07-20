@@ -1,5 +1,6 @@
 package com.example.carteira_api.controller;
 
+import com.example.carteira_api.service.AtivoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.carteira_api.service.SheetsService;
@@ -8,18 +9,20 @@ import com.example.carteira_api.service.SheetsService;
 @RestController
 public class AtivoController {
 
-    private final SheetsService service;
+    private final AtivoService service;
 
-    public AtivoController(){
-        this.service = new SheetsService();
+    public AtivoController(AtivoService service){
+        this.service = service;
     }
 
     @GetMapping("/{nomeAtivo}")
-    public ResponseEntity<AtivoResponseDto> getAtivo (@PathVariable String nomeAtivo)  {
-        var ativo = service.getAllActiveforName(nomeAtivo);
-        if (ativo == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> getAtivo (@PathVariable String nomeAtivo)  {
+        try {
+            var dto = service.getDataSheets(nomeAtivo);
+            return  dto == null ? ResponseEntity.notFound().build()
+                                : ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
-        return  ResponseEntity.ok(ativo);
     }
 }

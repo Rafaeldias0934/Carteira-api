@@ -11,6 +11,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.time.temporal.ValueRange;
@@ -23,17 +24,19 @@ public class SheetsService {
 
     private static final String APPLICATION_NAME = "Control Invest API Java";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static final String CREDENTIALS_FILE_PATH = "src/main/resource/google/credentials.json";
-    private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
+    private static final String CREDENTIALS_FILE_PATH = "src/main/resources/google/credentials.json";
+    private static final String ID = "1uwM3sN4n6sY1Xq44sYDOUUH8NdsjdXU4usbiy5QGcVc";
+    private static final String RANGE = "ResumoGeral!A2:D";
 
-    public static Sheets getSheetsService() throws Exception {
-        InputStream inputStream = SheetsService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+    private Sheets getSheetsService() throws Exception {
+        InputStream inputStream = new FileInputStream(CREDENTIALS_FILE_PATH);
         if (inputStream == null) {
-            throw new RuntimeException("File Credentials not found: " + CREDENTIALS_FILE_PATH);
+            throw new RuntimeException("File not found: " + CREDENTIALS_FILE_PATH);
         }
 
+
         GoogleCredentials credentials = GoogleCredentials.fromStream(inputStream)
-                .createScoped(Collections.singletonList("https://www.googleapis.com/auth/spreadsheets.readonly"));
+                .createScoped(List.of(SheetsScopes.SPREADSHEETS_READONLY));
 
         return new Sheets.Builder(
                 GoogleNetHttpTransport.newTrustedTransport(),
@@ -42,22 +45,16 @@ public class SheetsService {
         ).setApplicationName(APPLICATION_NAME).build();
 
     }
-    
+
+    public List<List<Object>> readData()throws Exception {
+        return  getSheetsService().spreadsheets()
+                .values()
+                .get(ID, RANGE)
+                .execute()
+                .getValues();
+
+    }
+
+
 
 }
-
-//public static Sheets getSheetsService() throws Exception, GeneralSecurityException {
-//        InputStream inputStream = SheetsService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
-//        if (inputStream == null) {
-//            throw new RuntimeException("File Credentials not found: " + CREDENTIALS_FILE_PATH);
-//        }
-//        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-//
-//        GoogleCredentials credentials = GoogleCredentials.fromStream(inputStream)
-//                .createScoped(List.of(SheetsScopes.SPREADSHEETS_READONLY));
-//
-//        return new Sheets.Builder(
-//                GoogleNetHttpTransport.newTrustedTransport(),
-//                JSON_FACTORY,
-//                new HttpCredentialsAdapter(credentials)
-//        ).setApplicationName(APPLICATION_NAME).build();
