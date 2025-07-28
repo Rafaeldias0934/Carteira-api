@@ -26,7 +26,7 @@ public class SheetsService {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String CREDENTIALS_FILE_PATH = "src/main/resources/google/credentials.json";
     private static final String ID = "1uwM3sN4n6sY1Xq44sYDOUUH8NdsjdXU4usbiy5QGcVc";
-    private static final String RANGE = "ResumoGeral!A2:D";
+    private static final String RANGE = "Resumo Geral!A1:D3";
 
     private Sheets getSheetsService() throws Exception {
         InputStream inputStream = new FileInputStream(CREDENTIALS_FILE_PATH);
@@ -54,7 +54,5 @@ public class SheetsService {
                 .getValues();
 
     }
-
-
 
 }
