@@ -16,4 +16,4 @@ credentials.json
 #Arquivos de log#
 *.log
 
-
+src/main/resources/application.properties
